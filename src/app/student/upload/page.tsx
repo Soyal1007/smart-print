@@ -31,6 +31,8 @@ export default function StudentUpload() {
   const [uid, setUid] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [dragOver, setDragOver] = useState(false);
+  const [shopOpen, setShopOpen] = useState<boolean | null>(null); // null = loading
+  const [offlineMsg, setOfflineMsg] = useState("The print shop is currently closed.");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const supabase = createClient();
@@ -41,6 +43,21 @@ export default function StudentUpload() {
       if (!user) { router.push("/login"); return; }
       setUid(user.uid);
       if (user.name) setName(user.name);
+
+      // ── Check shop status FIRST ─────────────────────────────
+      const { data: shopSettings } = await supabase
+        .from("shop_settings")
+        .select("is_open, offline_message")
+        .eq("id", 1)
+        .single();
+      if (shopSettings) {
+        setShopOpen(shopSettings.is_open);
+        if (shopSettings.offline_message) setOfflineMsg(shopSettings.offline_message);
+        if (!shopSettings.is_open) return; // don't load shop prices if closed
+      } else {
+        setShopOpen(true); // default to open if settings row missing
+      }
+
       const { data } = await supabase.from("shops").select("*").limit(1).single();
       if (data) {
         setShopPrices({
@@ -148,6 +165,34 @@ export default function StudentUpload() {
   };
 
   const handleLogout = async () => { await logout(); router.push("/login"); };
+
+  // ── Shop closed / loading guards ────────────────────────────────────────────
+  if (shopOpen === null) {
+    // Still loading shop status — show spinner
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <span className="material-symbols-outlined animate-spin text-primary text-5xl">sync</span>
+      </div>
+    );
+  }
+
+  if (shopOpen === false) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 text-center gap-6">
+        <div className="w-24 h-24 rounded-full bg-error-container flex items-center justify-center">
+          <span className="material-symbols-outlined text-5xl text-error" style={{ fontVariationSettings: "'FILL' 1" }}>store_off</span>
+        </div>
+        <div>
+          <h1 className="text-headline-lg-mobile text-on-surface font-bold mb-2">Print Shop is Closed</h1>
+          <p className="text-body-md text-on-surface-variant max-w-sm">{offlineMsg}</p>
+        </div>
+        <p className="text-label-sm text-outline">Please check back later. The shop owner will reopen the shop when available.</p>
+        <button onClick={() => router.push("/student/dashboard")} className="px-6 py-3 bg-primary text-on-primary rounded-full font-bold text-label-md hover:opacity-90 transition-opacity">
+          Back to Dashboard
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col" style={{ fontFamily: "'Geist', sans-serif", WebkitFontSmoothing: 'antialiased' }}>

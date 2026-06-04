@@ -178,27 +178,37 @@ export default function OwnerDashboard() {
           </Link>
         </nav>
         <div className="mt-auto px-4">
-          {/* Shop Status Toggle */}
-          <div className={`rounded-2xl p-4 mb-3 border-2 transition-colors ${isShopOpen ? 'bg-tertiary-container/20 border-tertiary/30' : 'bg-error-container/20 border-error/30'}`}>
+          {/* Shop Status Toggle — fixed visual */}
+          <div className={`rounded-2xl p-4 mb-3 border-2 transition-all duration-300 ${
+            isShopOpen ? 'bg-green-500/10 border-green-500/30' : 'bg-red-500/10 border-red-500/40'
+          }`}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${isShopOpen ? 'bg-green-500 animate-pulse' : 'bg-error'}`}></span>
+                <span className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                  isShopOpen ? 'bg-green-500 animate-pulse' : 'bg-red-500'
+                }`}></span>
                 <span className="text-label-sm font-bold text-on-surface">
-                  {isShopOpen ? "Shop: OPEN" : "Shop: CLOSED"}
+                  Shop: {isShopOpen ? 'OPEN' : 'CLOSED'}
                 </span>
               </div>
+              {/* Toggle: left=closed(red), right=open(green) */}
               <button
                 onClick={toggleShop}
                 disabled={togglingShop}
-                className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none
-                  ${isShopOpen ? 'bg-primary' : 'bg-outline'}`}
+                aria-label="Toggle shop open/closed"
+                className={`relative w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+                  isShopOpen
+                    ? 'bg-green-500 focus:ring-green-400'
+                    : 'bg-red-400 focus:ring-red-400'
+                } ${togglingShop ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
               >
-                <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300
-                  ${isShopOpen ? 'translate-x-7' : 'translate-x-1'}`}></span>
+                <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300 ${
+                  isShopOpen ? 'translate-x-7' : 'translate-x-1'
+                }`}></span>
               </button>
             </div>
             <p className="text-label-sm text-on-surface-variant">
-              {isShopOpen ? 'Toggle to close for holidays' : 'Students see closed banner'}
+              {isShopOpen ? 'Toggle off to close for holidays' : 'Students see a closed banner'}
             </p>
           </div>
           <div className="bg-surface-container-high rounded-2xl p-4 flex items-center gap-3">
@@ -225,9 +235,17 @@ export default function OwnerDashboard() {
           <div className="flex items-center gap-4">
             <img alt="College Logo" className="h-10 w-10 object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyiu6s2JTPGnswZA1eR1JGMfYFFRlEI0zkrWreT3W4Q0WcScegQcPecqZeJNnTuWtuMb4N8IlmLMeU2wvhcDoTiG3r3-wJpdTVvKLSCUs4s6IrKEf3XFTWAH_g4JgH6Tk6YSTRWifxyHVo9-gF2OE_ObQID0cWOzKiaLYl8A1o4-d8G00AW8h0wDUbwpF5ucQXkMpEakHjVyMapGYMx_UCaT-e-ClojZddPe0VcYcnYUvHawp0A5aB7bUHPikPAHkd2DkPd_kbsTI" />
             <div className="h-6 w-[1px] bg-outline-variant"></div>
-            <div className="flex items-center gap-2 px-3 py-1 bg-tertiary-container/10 text-tertiary-container rounded-full">
-              <span className="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></span>
-              <span className="text-label-sm font-bold">Printer Status: Online</span>
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${
+              isShopOpen
+                ? 'bg-tertiary-container/10 text-tertiary-container'
+                : 'bg-error-container/20 text-error'
+            }`}>
+              <span className={`w-2 h-2 rounded-full ${
+                isShopOpen ? 'bg-tertiary-fixed animate-pulse' : 'bg-error'
+              }`}></span>
+              <span className="text-label-sm font-bold">
+                {isShopOpen ? 'Printer Status: Online' : 'Shop: CLOSED'}
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-6">
