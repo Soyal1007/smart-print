@@ -125,7 +125,8 @@ export default function StudentUpload() {
               page.drawRectangle({ x: width - tw - 25, y: height - 30, width: tw + 10, height: 20, color: rgb(1, 1, 1), opacity: 0.8 });
               page.drawText(text, { x: width - tw - 20, y: height - 25, size: 12, font, color: rgb(0, 0, 0) });
             }
-            finalFile = new Blob([await pdf.save()], { type: "application/pdf" });
+            const pdfBytes = await pdf.save();
+            finalFile = new Blob([new Uint8Array(pdfBytes)], { type: "application/pdf" });
           } catch (e) { /* fallback */ }
         }
         const safeFilename = `${Date.now()}_${f.file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
