@@ -176,6 +176,7 @@ export default function LandingPage() {
           <div className="flex flex-col items-center md:items-start gap-2">
             <span className="text-label-md font-bold text-on-surface">Smart Print Campus Utilities</span>
             <p className="text-label-sm text-on-surface-variant">© 2024 Smart Print Campus Utilities</p>
+            <p className="text-label-sm text-outline">Built by <span className="text-primary font-semibold">Soyal Binu Eapen</span></p>
           </div>
           <div className="flex gap-6">
             <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4 transition-all" href="#">Support</a>
