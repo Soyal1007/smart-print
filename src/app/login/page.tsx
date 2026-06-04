@@ -96,7 +96,7 @@ export default function LoginPage() {
                     className="w-full h-16 px-6 bg-surface-container-low border-2 border-transparent focus:border-primary rounded-xl text-headline-lg-mobile text-on-surface transition-all duration-200 placeholder:text-outline/30 outline-none"
                     id="uid"
                     inputMode="numeric"
-                    placeholder="e.g. 25013XXX"
+                    placeholder="UID"
                     value={uid}
                     onChange={e => setUid(e.target.value.replace(/[^0-9A-Za-z]/g, ""))}
                   />

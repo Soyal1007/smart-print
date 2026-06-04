@@ -12,7 +12,7 @@ export default function OwnerDashboard() {
   const [stats, setStats] = useState({ todayRevenue: 0, todayJobs: 0, totalPages: 0, queueCount: 0 });
   const [search, setSearch] = useState("");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [lastUpdated, setLastUpdated] = useState(""); // empty until client mounts — avoids hydration mismatch
   const supabase = createClient();
   const router = useRouter();
 
@@ -22,7 +22,7 @@ export default function OwnerDashboard() {
       .select("*, job_files(*), profiles(uid, name)")
       .in("status", ["queued", "printing", "printed", "paid"])
       .order("created_at", { ascending: true });
-    if (queueData) { setJobs(queueData); setLastUpdated(new Date()); }
+    if (queueData) { setJobs(queueData); setLastUpdated(new Date().toLocaleTimeString()); }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -342,7 +342,7 @@ export default function OwnerDashboard() {
             </div>
             <div className="px-6 py-3 border-t border-outline-variant bg-surface flex justify-between items-center">
               <p className="text-label-sm text-outline">
-                Showing {filteredJobs.length} active jobs · Last updated: {lastUpdated.toLocaleTimeString('en-IN')}
+                Showing {filteredJobs.length} active jobs{lastUpdated ? ` · Updated: ${lastUpdated}` : ""}
                 <span className="ml-2 inline-flex items-center gap-1 text-tertiary"><span className="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse inline-block"></span>Live</span>
               </p>
               <div className="flex items-center gap-4">
