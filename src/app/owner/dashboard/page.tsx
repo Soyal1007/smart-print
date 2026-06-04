@@ -191,19 +191,17 @@ export default function OwnerDashboard() {
                   Shop: {isShopOpen ? 'OPEN' : 'CLOSED'}
                 </span>
               </div>
-              {/* Toggle: left=closed(red), right=open(green) */}
+              {/* Toggle — track w-12(48px) h-6(24px), thumb w-4(16px) h-4(16px) */}
               <button
                 onClick={toggleShop}
                 disabled={togglingShop}
                 aria-label="Toggle shop open/closed"
-                className={`relative w-14 h-7 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
-                  isShopOpen
-                    ? 'bg-green-500 focus:ring-green-400'
-                    : 'bg-red-400 focus:ring-red-400'
+                className={`relative inline-flex items-center w-12 h-6 rounded-full transition-colors duration-300 flex-shrink-0 focus:outline-none ${
+                  isShopOpen ? 'bg-green-500' : 'bg-red-400'
                 } ${togglingShop ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
               >
-                <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-300 ${
-                  isShopOpen ? 'translate-x-7' : 'translate-x-1'
+                <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 ${
+                  isShopOpen ? 'left-7' : 'left-1'
                 }`}></span>
               </button>
             </div>
