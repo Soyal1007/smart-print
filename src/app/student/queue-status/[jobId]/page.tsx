@@ -87,10 +87,11 @@ export default function PrintQueueStatusPage({ params }: { params: Promise<{ job
     setLoading(false);
   }, [jobId, sendNotification]);
 
-  // ── Realtime subscription (Supabase postgres_changes) ─────────────────────
+  // ── Realtime subscription + polling fallback ─────────────────────────────
   useEffect(() => {
     fetchJob();
 
+    // Realtime — instant update the moment DB row changes
     const channel = supabase
       .channel(`job_status_${jobId}`)
       .on(
@@ -100,25 +101,31 @@ export default function PrintQueueStatusPage({ params }: { params: Promise<{ job
           const newStatus = payload.new.status;
           const oldStatus = prevStatusRef.current;
 
-          // Notifications on status change
-          if (oldStatus && oldStatus !== newStatus) {
-            if (newStatus === "printed") {
-              sendNotification("📄 Your print is ready!", "Collect your document from the print shop.");
-            } else if (newStatus === "printing") {
-              sendNotification("🖨️ Printing started", "Your document is now printing.");
-            }
+          // Only notify when print is DONE (shop owner pressed Mark Printed)
+          if (oldStatus && oldStatus !== newStatus && newStatus === "printed") {
+            sendNotification(
+              "📄 Your print is ready!",
+              "Come collect your document from the print desk."
+            );
           }
+
           prevStatusRef.current = newStatus;
           setJob(payload.new);
 
           if (newStatus === "printed" || newStatus === "collected") {
-            setTimeout(() => router.push(`/student/print-ready/${jobId}`), 800);
+            setTimeout(() => router.push(`/student/print-ready/${jobId}`), 600);
           }
         }
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    // Polling fallback every 6s — guarantees refresh even if realtime drops
+    const poll = setInterval(fetchJob, 6000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(poll);
+    };
   }, [jobId]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Status step mapping ─────────────────────────────────────────────────────

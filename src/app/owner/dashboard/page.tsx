@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { logout } from "@/app/actions/auth";
@@ -44,10 +44,20 @@ export default function OwnerDashboard() {
 
   useEffect(() => {
     fetchData();
-    const channel = supabase.channel('owner_queue')
+
+    // Realtime subscription — instant updates
+    const channel = supabase
+      .channel('owner_queue_live')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'print_jobs' }, () => fetchData())
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    // Polling fallback every 8s — in case realtime drops
+    const poll = setInterval(fetchData, 8000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(poll);
+    };
   }, []);
 
   const handleMarkCollected = async (jobId: string) => {
@@ -233,9 +243,8 @@ export default function OwnerDashboard() {
                         </td>
                       </tr>
                     ) : filteredJobs.map((job, i) => (
-                      <>
+                      <Fragment key={job.id}>
                         <tr
-                          key={job.id}
                           className={`hover:bg-surface-container-low/40 transition-colors cursor-pointer ${selectedJobId === job.id ? 'bg-primary/5 border-l-2 border-primary' : ''}`}
                           onClick={() => setSelectedJobId(selectedJobId === job.id ? null : job.id)}
                         >
@@ -334,7 +343,7 @@ export default function OwnerDashboard() {
                             </td>
                           </tr>
                         )}
-                      </>
+                      </Fragment>
                     ))}
                   </tbody>
                 </table>
