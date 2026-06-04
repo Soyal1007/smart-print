@@ -1,10 +1,28 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LandingPage() {
   const router = useRouter();
+  const supabase = createClient();
+  const [shopOpen, setShopOpen] = useState(true);
+  const [offlineMsg, setOfflineMsg] = useState("");
+
+  useEffect(() => {
+    supabase.from("shop_settings").select("is_open, offline_message").eq("id", 1).single()
+      .then(({ data }) => { if (data) { setShopOpen(data.is_open); setOfflineMsg(data.offline_message); } });
+  }, []);
+
   return (
     <div className="bg-background text-on-surface min-h-screen" style={{ fontFamily: "'Geist', sans-serif", WebkitFontSmoothing: 'antialiased' }}>
+      {/* Shop Closed Banner */}
+      {!shopOpen && (
+        <div className="bg-error text-on-error text-center py-3 px-4 text-label-md font-bold flex items-center justify-center gap-2">
+          <span className="material-symbols-outlined text-base">store_off</span>
+          {offlineMsg || "The print shop is currently closed. Please check back later."}
+        </div>
+      )}
       {/* TopAppBar */}
       <header className="bg-surface fixed top-0 w-full h-16 flex justify-between items-center px-margin-mobile md:px-margin-desktop z-50 shadow-sm">
         <div className="flex items-center gap-3">

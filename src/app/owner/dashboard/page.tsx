@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, useRef, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { logout } from "@/app/actions/auth";
 import Link from "next/link";
+import { useToast } from "@/components/Toast";
 
 export default function OwnerDashboard() {
   const [jobs, setJobs] = useState<any[]>([]);
@@ -12,17 +13,38 @@ export default function OwnerDashboard() {
   const [stats, setStats] = useState({ todayRevenue: 0, todayJobs: 0, totalPages: 0, queueCount: 0 });
   const [search, setSearch] = useState("");
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  const [lastUpdated, setLastUpdated] = useState(""); // empty until client mounts — avoids hydration mismatch
+  const [lastUpdated, setLastUpdated] = useState("");
+  const [isShopOpen, setIsShopOpen] = useState(true);
+  const [offlineMsg, setOfflineMsg] = useState("The print shop is currently closed.");
+  const [togglingShop, setTogglingShop] = useState(false);
+  const [previewJob, setPreviewJob] = useState<any | null>(null);
+  const [previewUrls, setPreviewUrls] = useState<{ name: string; url: string; type: string }[]>([]);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [activePreviewIdx, setActivePreviewIdx] = useState(0);
+  const prevJobCountRef = useRef<number>(-1);
   const supabase = createClient();
   const router = useRouter();
+  const { showToast } = useToast();
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const { data: queueData } = await supabase
       .from("print_jobs")
       .select("*, job_files(*), profiles(uid, name)")
       .in("status", ["queued", "printing", "printed", "paid"])
       .order("created_at", { ascending: true });
-    if (queueData) { setJobs(queueData); setLastUpdated(new Date().toLocaleTimeString()); }
+
+    if (queueData) {
+      // Alert on new job arrival
+      const newCount = queueData.filter(j => ['queued', 'paid', 'printing'].includes(j.status)).length;
+      if (prevJobCountRef.current >= 0 && newCount > prevJobCountRef.current) {
+        const diff = newCount - prevJobCountRef.current;
+        showToast("info", `🖨️ New job${diff > 1 ? 's' : ''} arrived!`,
+          `${diff} new print ${diff > 1 ? 'jobs' : 'job'} added to the queue.`);
+      }
+      prevJobCountRef.current = newCount;
+      setJobs(queueData);
+      setLastUpdated(new Date().toLocaleTimeString());
+    }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -39,26 +61,53 @@ export default function OwnerDashboard() {
         queueCount: (queueData || []).filter(j => ['queued', 'printing', 'paid'].includes(j.status)).length,
       });
     }
+
+    // Fetch shop status
+    const { data: shopData } = await supabase.from("shop_settings").select("*").eq("id", 1).single();
+    if (shopData) { setIsShopOpen(shopData.is_open); setOfflineMsg(shopData.offline_message); }
+
     setLoading(false);
-  };
+  }, [showToast]);
 
   useEffect(() => {
     fetchData();
-
-    // Realtime subscription — instant updates
     const channel = supabase
       .channel('owner_queue_live')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'print_jobs' }, () => fetchData())
       .subscribe();
-
-    // Polling fallback every 8s — in case realtime drops
     const poll = setInterval(fetchData, 8000);
+    return () => { supabase.removeChannel(channel); clearInterval(poll); };
+  }, [fetchData]);
 
-    return () => {
-      supabase.removeChannel(channel);
-      clearInterval(poll);
-    };
-  }, []);
+  const toggleShop = async () => {
+    setTogglingShop(true);
+    const newState = !isShopOpen;
+    await supabase.from("shop_settings").update({ is_open: newState, updated_at: new Date().toISOString() }).eq("id", 1);
+    setIsShopOpen(newState);
+    showToast(newState ? "success" : "warning",
+      newState ? "Shop is now OPEN" : "Shop marked as CLOSED",
+      newState ? "Students can now submit print jobs." : "No new jobs can be submitted until reopened.");
+    setTogglingShop(false);
+  };
+
+  const openPreview = async (job: any) => {
+    setPreviewJob(job);
+    setPreviewUrls([]);
+    setActivePreviewIdx(0);
+    setPreviewLoading(true);
+    const urls: { name: string; url: string; type: string }[] = [];
+    for (const f of (job.job_files || [])) {
+      const path = f.storage_path || f.file_path;
+      if (!path) continue;
+      const { data } = await supabase.storage.from("orders").createSignedUrl(path, 300);
+      if (data?.signedUrl) {
+        const isImg = /\.(png|jpg|jpeg|gif|webp)$/i.test(f.original_filename || "");
+        urls.push({ name: f.original_filename, url: data.signedUrl, type: isImg ? "image" : "pdf" });
+      }
+    }
+    setPreviewUrls(urls);
+    setPreviewLoading(false);
+  };
 
   const handleMarkCollected = async (jobId: string) => {
     await supabase.from("print_jobs").update({ status: "collected" }).eq("id", jobId);
@@ -129,6 +178,29 @@ export default function OwnerDashboard() {
           </Link>
         </nav>
         <div className="mt-auto px-4">
+          {/* Shop Status Toggle */}
+          <div className={`rounded-2xl p-4 mb-3 border-2 transition-colors ${isShopOpen ? 'bg-tertiary-container/20 border-tertiary/30' : 'bg-error-container/20 border-error/30'}`}>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className={`w-2.5 h-2.5 rounded-full ${isShopOpen ? 'bg-green-500 animate-pulse' : 'bg-error'}`}></span>
+                <span className="text-label-sm font-bold text-on-surface">
+                  {isShopOpen ? "Shop: OPEN" : "Shop: CLOSED"}
+                </span>
+              </div>
+              <button
+                onClick={toggleShop}
+                disabled={togglingShop}
+                className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none
+                  ${isShopOpen ? 'bg-primary' : 'bg-outline'}`}
+              >
+                <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform duration-300
+                  ${isShopOpen ? 'translate-x-7' : 'translate-x-1'}`}></span>
+              </button>
+            </div>
+            <p className="text-label-sm text-on-surface-variant">
+              {isShopOpen ? 'Toggle to close for holidays' : 'Students see closed banner'}
+            </p>
+          </div>
           <div className="bg-surface-container-high rounded-2xl p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
               <span className="material-symbols-outlined">person</span>
@@ -291,6 +363,13 @@ export default function OwnerDashboard() {
                                   Mark Collected
                                 </button>
                               ) : null}
+                              <button
+                                onClick={() => openPreview(job)}
+                                className="p-2 rounded-full hover:bg-primary-container text-primary transition-colors"
+                                title="Preview documents"
+                              >
+                                <span className="material-symbols-outlined">preview</span>
+                              </button>
                               <button className="p-2 rounded-full hover:bg-surface-variant text-outline transition-colors">
                                 <span className="material-symbols-outlined">{selectedJobId === job.id ? 'expand_less' : 'expand_more'}</span>
                               </button>
@@ -381,6 +460,77 @@ export default function OwnerDashboard() {
           </div>
         </footer>
       </main>
+
+      {/* ── Preview Modal ─────────────────────────────────────────────────── */}
+      {previewJob && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setPreviewJob(null)}
+        >
+          <div
+            className="bg-surface rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant">
+              <div>
+                <p className="text-label-sm text-outline">Previewing job for</p>
+                <h3 className="text-title-md font-bold text-on-surface">{previewJob.profiles?.name} · UID: {previewJob.profiles?.uid}</h3>
+              </div>
+              <button onClick={() => setPreviewJob(null)} className="w-9 h-9 rounded-full hover:bg-surface-variant flex items-center justify-center">
+                <span className="material-symbols-outlined">close</span>
+              </button>
+            </div>
+
+            {/* File tabs */}
+            {previewUrls.length > 1 && (
+              <div className="flex gap-2 px-6 pt-3 overflow-x-auto">
+                {previewUrls.map((f, i) => (
+                  <button key={i} onClick={() => setActivePreviewIdx(i)}
+                    className={`px-4 py-1.5 rounded-full text-label-sm font-bold whitespace-nowrap transition-colors
+                      ${activePreviewIdx === i ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-variant'}`}>
+                    File {i + 1}: {f.name.length > 20 ? f.name.slice(0, 20) + '…' : f.name}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Preview area */}
+            <div className="flex-1 overflow-hidden p-4">
+              {previewLoading ? (
+                <div className="flex justify-center items-center h-full">
+                  <span className="material-symbols-outlined animate-spin text-primary text-5xl">sync</span>
+                </div>
+              ) : previewUrls.length === 0 ? (
+                <div className="flex flex-col justify-center items-center h-full text-on-surface-variant gap-2">
+                  <span className="material-symbols-outlined text-5xl">broken_image</span>
+                  <p>No preview available</p>
+                </div>
+              ) : (
+                <>
+                  {previewUrls[activePreviewIdx]?.type === "image" ? (
+                    <img
+                      src={previewUrls[activePreviewIdx].url}
+                      alt="Preview"
+                      className="w-full h-full object-contain rounded-xl"
+                    />
+                  ) : (
+                    <iframe
+                      src={previewUrls[activePreviewIdx]?.url}
+                      className="w-full h-[60vh] rounded-xl border border-outline-variant"
+                      title="PDF Preview"
+                    />
+                  )}
+                  {/* UID watermark info */}
+                  <p className="text-label-sm text-outline text-center mt-2">
+                    UID watermark: {previewJob.profiles?.uid} · {previewJob.total_pages} pages · ₹{((previewJob.total_price_paise || 0) / 100).toFixed(2)}
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
