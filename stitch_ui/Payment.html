@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Print | Payment</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#e5eeff",
+                    "on-primary": "#ffffff",
+                    "tertiary-container": "#005c3e",
+                    "surface-container-low": "#eff4ff",
+                    "tertiary-fixed": "#6ffbbe",
+                    "surface": "#f8f9ff",
+                    "on-surface-variant": "#444651",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed-dim": "#b3c5ff",
+                    "on-tertiary-fixed": "#002113",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#eaf1ff",
+                    "primary-container": "#2b4c9b",
+                    "surface-variant": "#d3e4fe",
+                    "secondary-fixed": "#e1e0ff",
+                    "tertiary": "#00422b",
+                    "secondary-container": "#6063ee",
+                    "primary-fixed": "#dae1ff",
+                    "primary": "#093483",
+                    "on-surface": "#0b1c30",
+                    "outline": "#747682",
+                    "on-primary-container": "#aec1ff",
+                    "secondary": "#4648d4",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#07006c",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#213145",
+                    "on-primary-fixed": "#001849",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "on-tertiary-container": "#49da9f",
+                    "on-secondary-fixed-variant": "#2f2ebe",
+                    "on-primary-fixed-variant": "#1f4291",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "background": "#f8f9ff",
+                    "surface-container-high": "#dce9ff",
+                    "on-error": "#ffffff",
+                    "on-secondary-container": "#fffbff",
+                    "inverse-primary": "#b3c5ff",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "surface-dim": "#cbdbf5",
+                    "outline-variant": "#c4c6d3",
+                    "surface-tint": "#3b5baa",
+                    "on-background": "#0b1c30",
+                    "surface-container-highest": "#d3e4fe",
+                    "secondary-fixed-dim": "#c0c1ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "container-max": "1440px",
+                    "margin-desktop": "40px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "headline-lg-mobile": ["Geist"],
+                    "title-md": ["Geist"],
+                    "label-md": ["Geist"],
+                    "body-md": ["Geist"],
+                    "headline-xl": ["Geist"],
+                    "body-lg": ["Geist"],
+                    "label-sm": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Geist', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .animate-success-circle { animation: scaleIn 0.5s ease-out forwards; }
+        .animate-check { stroke-dasharray: 100; stroke-dashoffset: 100; animation: dash 0.8s 0.4s ease-in-out forwards; }
+        @keyframes scaleIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+        .payment-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .payment-card:hover { transform: translateY(-4px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full h-16 bg-surface shadow-sm px-margin-mobile flex justify-between items-center z-50">
+<div class="flex items-center gap-3">
+<button class="p-2 hover:bg-surface-variant rounded-full transition-colors active:scale-95 duration-150" onclick="history.back()">
+<span class="material-symbols-outlined text-primary">arrow_back</span>
+</button>
+<span class="text-title-md font-title-md font-bold text-primary">Smart Print</span>
+</div>
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1 rounded-full">
+<span class="text-label-md font-label-md text-on-surface-variant">UID: 2024-8832</span>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 px-margin-mobile max-w-2xl mx-auto w-full">
+<!-- Order Summary Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] mb-gutter border border-outline-variant">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h2 class="text-title-md font-title-md text-primary mb-1">Order Summary</h2>
+<p class="text-label-md font-label-md text-on-surface-variant">Order ID: UID 25013003</p>
+</div>
+<div class="bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-label-sm font-label-sm">
+                    In Progress
+                </div>
+</div>
+<div class="space-y-3 border-t border-outline-variant pt-4">
+<div class="flex justify-between text-body-md font-body-md">
+<span class="text-on-surface-variant">Documents (12 Pages)</span>
+<span class="text-on-surface font-semibold">₹18.00</span>
+</div>
+<div class="flex justify-between text-body-md font-body-md">
+<span class="text-on-surface-variant">Printing Mode (B&amp;W)</span>
+<span class="text-on-surface font-semibold">₹6.00</span>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-4 mt-2">
+<span class="text-title-md font-title-md text-on-surface">Total Amount</span>
+<span class="text-headline-lg-mobile font-headline-lg-mobile text-primary">₹24.00</span>
+</div>
+</div>
+</div>
+<!-- Payment Methods Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- QR Code Section -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant flex flex-col items-center text-center">
+<h3 class="text-label-md font-label-md text-primary uppercase tracking-wider mb-4">Scan to Pay</h3>
+<div class="bg-white p-4 rounded-xl shadow-sm mb-4 relative group">
+<div class="w-48 h-48 bg-gray-100 flex items-center justify-center relative overflow-hidden">
+<!-- Simulated QR Code with Data Alt -->
+<img class="w-full h-full object-cover" data-alt="A clean, high-resolution QR code displayed on a modern smartphone screen against a soft-focus background of a contemporary campus print center. The lighting is bright and professional, emphasizing a high-tech corporate utility aesthetic. The composition is centered, using a crisp color palette of deep navy blues and pure whites to convey security and efficiency in a minimalist digital environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKDgoDA5Cb8nzYD23RK8VHgXi8Esg4XBCPY2CMb45mpYwemAhHnd90-h2L09m4kgzALN6aqj_CTGXF2wCO5YbrUjv1myV1zMopgX6RpP6VycSoXPvBkrSBsYVVfPtbE1OVcT05BGKfNg5BayRnbCqhFwsImReAazfqUdtNXFbFmZpiTDLxNzvhDd-Pk6bUjZWWvDrD7CKenj0EHTkKce9Vre5Xo9NS8VTHl_3NHYybBTwred0rvukJMnv_qYn89bd-J30HObQOqPc"/>
+<div class="absolute inset-0 bg-primary/5 group-hover:bg-transparent transition-colors"></div>
+</div>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Scan with any UPI app to pay ₹24</p>
+</div>
+<!-- UPI Apps List -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant">
+<h3 class="text-label-md font-label-md text-primary uppercase tracking-wider mb-4">UPI Apps</h3>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-between p-4 bg-surface rounded-lg border border-outline-variant hover:bg-surface-variant transition-colors group active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface">Google Pay</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface rounded-lg border border-outline-variant hover:bg-surface-variant transition-colors group active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface">PhonePe</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-surface rounded-lg border border-outline-variant hover:bg-surface-variant transition-colors group active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">language</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface">Other UPI IDs</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Success Animation Placeholder (Hidden by default) -->
+<div class="fixed inset-0 bg-surface/95 backdrop-blur-md z-[100] hidden flex-col items-center justify-center" id="success-overlay">
+<div class="relative flex items-center justify-center mb-6">
+<div class="w-24 h-24 rounded-full bg-tertiary/10 animate-success-circle"></div>
+<svg class="absolute w-12 h-12 text-tertiary" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path class="animate-check" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h1 class="text-headline-lg-mobile font-headline-lg-mobile text-primary mb-2">Payment Successful</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Redirecting to printing queue...</p>
+</div>
+</main>
+<!-- Bottom Action for Mobile -->
+<div class="fixed bottom-0 w-full bg-surface-container-lowest border-t border-outline-variant px-margin-mobile py-4 md:hidden z-40">
+<button class="w-full h-14 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform" onclick="simulatePayment()">
+<span class="material-symbols-outlined">verified_user</span>
+            PAY ₹24.00 NOW
+        </button>
+</div>
+<!-- Footer -->
+<footer class="w-full py-unit px-margin-mobile flex flex-col md:flex-row justify-between items-center gap-4 bg-surface border-t border-outline-variant mt-auto">
+<div class="flex items-center gap-2 text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">gpp_good</span>
+<span class="text-label-sm font-label-sm font-bold uppercase tracking-widest">Secure 256-bit Transaction</span>
+</div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4" href="#">Support</a>
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4" href="#">Terms of Service</a>
+</div>
+<div class="text-on-surface-variant text-label-sm font-label-sm">
+            © 2024 Smart Print Campus Utilities
+        </div>
+</footer>
+<script>
+        function simulatePayment() {
+            const overlay = document.getElementById('success-overlay');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            
+            // Interaction: Pulse effect on background elements before they disappear
+            setTimeout(() => {
+                window.location.href = '#'; // Redirect to history or success screen
+                console.log('Payment process completed.');
+            }, 3000);
+        }
+
+        // Add subtle hover micro-interactions
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                if(!btn.classList.contains('bg-primary')) {
+                    btn.classList.add('translate-y-[-1px]');
+                }
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.classList.remove('translate-y-[-1px]');
+            });
+        });
+    </script>
+</body></html>

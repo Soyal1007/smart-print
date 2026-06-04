@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart Print | Live Queue</title>
+<!-- Google Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#005c3e",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#444651",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "on-tertiary-fixed": "#002113",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-container": "#2b4c9b",
+                        "surface-variant": "#d3e4fe",
+                        "secondary-fixed": "#e1e0ff",
+                        "tertiary": "#00422b",
+                        "secondary-container": "#6063ee",
+                        "primary-fixed": "#dae1ff",
+                        "primary": "#093483",
+                        "on-surface": "#0b1c30",
+                        "outline": "#747682",
+                        "on-primary-container": "#aec1ff",
+                        "secondary": "#4648d4",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#07006c",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-primary-fixed": "#001849",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-tertiary-container": "#49da9f",
+                        "on-secondary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed-variant": "#1f4291",
+                        "surface-bright": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#fffbff",
+                        "inverse-primary": "#b3c5ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c4c6d3",
+                        "surface-tint": "#3b5baa",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-fixed-dim": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "title-md": ["Geist"],
+                        "label-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        .active-pulse { animation: pulse-ring 2s infinite ease-in-out; }
+        .glass-panel { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-hidden h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm docked full-width top-0 flex justify-between items-center px-margin-mobile w-full h-16 z-50">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">print</span>
+</div>
+<h1 class="text-title-md font-title-md font-bold text-primary">Smart Print</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-4">
+<span class="text-primary font-bold text-label-md font-label-md">Live Queue</span>
+<span class="text-on-surface-variant text-label-md font-label-md hover:bg-surface-variant transition-colors rounded px-2">History</span>
+</div>
+<div class="text-primary font-bold text-label-md font-label-md border border-primary-container rounded-full px-4 py-1">
+                UID: 2024-8832
+            </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow p-gutter md:p-margin-desktop grid grid-cols-12 gap-gutter h-full overflow-hidden">
+<!-- Left Column: Active Printing & Queue (Bento Style) -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-gutter">
+<!-- CURRENT PRINTING -->
+<section class="bg-primary text-on-primary rounded-xl p-8 shadow-md flex flex-col justify-between relative overflow-hidden h-1/2">
+<!-- Abstract BG pattern -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container opacity-20 rounded-full -mr-20 -mt-20"></div>
+<div class="z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="active-pulse w-3 h-3 rounded-full bg-tertiary-fixed"></span>
+<h2 class="text-label-md font-label-md uppercase tracking-widest opacity-80">Currently Printing</h2>
+</div>
+<div class="flex flex-col md:flex-row items-baseline gap-6">
+<span class="text-headline-xl font-headline-xl">25013003</span>
+<span class="px-4 py-1 bg-tertiary-container text-tertiary-fixed border border-tertiary-fixed/30 rounded-full text-label-md font-label-md">ST-HP-401_A</span>
+</div>
+</div>
+<div class="z-10 mt-auto">
+<div class="flex justify-between items-end mb-4">
+<div>
+<p class="text-body-md font-body-md opacity-70">Document</p>
+<p class="text-title-md font-title-md">Final_Project_V2.pdf</p>
+</div>
+<div class="text-right">
+<p class="text-headline-lg font-headline-lg">84%</p>
+</div>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-3 bg-white/20 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed w-[84%] transition-all duration-1000 ease-in-out"></div>
+</div>
+</div>
+</section>
+<!-- NEXT IN QUEUE -->
+<section class="bg-surface-container rounded-xl p-8 shadow-sm flex-grow overflow-hidden flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-headline-lg font-headline-lg text-primary">Next In Queue</h2>
+<span class="text-label-md font-label-md text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">6 Pending</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+<!-- Queue Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant flex justify-between items-center shadow-sm hover:scale-[1.02] transition-transform duration-200">
+<div>
+<p class="text-label-sm font-label-sm text-outline mb-1 uppercase tracking-tight">ID TOKEN</p>
+<p class="text-headline-lg font-headline-lg text-on-surface">25013009</p>
+<p class="text-body-md font-body-md text-on-surface-variant">Thesis_Draft_01.docx</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl">hourglass_empty</span>
+</div>
+<!-- Queue Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant flex justify-between items-center shadow-sm hover:scale-[1.02] transition-transform duration-200">
+<div>
+<p class="text-label-sm font-label-sm text-outline mb-1 uppercase tracking-tight">ID TOKEN</p>
+<p class="text-headline-lg font-headline-lg text-on-surface">25013012</p>
+<p class="text-body-md font-body-md text-on-surface-variant">Lab_Report_Chem.pdf</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl">hourglass_empty</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Recently Printed & System Stats -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter h-full">
+<!-- RECENTLY PRINTED -->
+<section class="bg-surface-container-high rounded-xl p-6 shadow-sm flex flex-col flex-grow overflow-hidden">
+<h2 class="text-title-md font-title-md text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">history</span>
+                    Recently Printed
+                </h2>
+<div class="flex flex-col gap-3 overflow-y-auto pr-2">
+<!-- Item -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border-b border-outline-variant">
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">25012998</p>
+<p class="text-label-sm font-label-sm text-outline">12 Pages • Completed 2m ago</p>
+</div>
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+<!-- Item -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border-b border-outline-variant">
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">25012992</p>
+<p class="text-label-sm font-label-sm text-outline">4 Pages • Completed 8m ago</p>
+</div>
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+<!-- Item -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border-b border-outline-variant">
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">25012985</p>
+<p class="text-label-sm font-label-sm text-outline">28 Pages • Completed 15m ago</p>
+</div>
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+<!-- Item -->
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest/50 rounded-lg border-b border-outline-variant">
+<div>
+<p class="text-label-md font-label-md font-bold text-on-surface">25012980</p>
+<p class="text-label-sm font-label-sm text-outline">1 Page • Completed 22m ago</p>
+</div>
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+</div>
+</div>
+</section>
+<!-- SYSTEM HEALTH -->
+<section class="bg-inverse-surface text-inverse-on-surface rounded-xl p-6 shadow-lg">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-label-md font-label-md uppercase tracking-wider opacity-70">Printer Status</h3>
+<div class="flex gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed"></span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white/10 p-4 rounded-lg">
+<p class="text-label-sm font-label-sm opacity-60">Paper Level</p>
+<p class="text-title-md font-title-md">72%</p>
+</div>
+<div class="bg-white/10 p-4 rounded-lg">
+<p class="text-label-sm font-label-sm opacity-60">Toner (Black)</p>
+<p class="text-title-md font-title-md">18%</p>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
+<span class="text-label-sm font-label-sm opacity-60">Last synced: Just now</span>
+<span class="flex items-center gap-1 text-tertiary-fixed text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-sm">sync</span>
+                        LIVE
+                    </span>
+</div>
+</section>
+</div>
+</main>
+<!-- Navigation (Suppressed for Dashboard view as per Focus Journey, but maintaining small footer for identification) -->
+<footer class="w-full py-4 px-margin-mobile flex flex-col md:flex-row justify-between items-center gap-4 bg-surface border-t border-outline-variant">
+<div class="text-label-md font-label-md font-bold text-on-surface">© 2024 Smart Print Campus Utilities</div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4" href="#">Terms of Service</a>
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4" href="#">Support</a>
+<a class="text-on-surface-variant text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4" href="#">System Health</a>
+</div>
+</footer>
+<!-- Overlay Visual Effects for 'Real-time Refresh' Aesthetic -->
+<div class="fixed inset-0 pointer-events-none border-[12px] border-primary/5 z-[100]"></div>
+<script>
+        // Micro-interaction for live progress simulation
+        let progress = 84;
+        const progressBar = document.querySelector('.bg-tertiary-fixed');
+        const progressText = document.querySelector('.text-right .text-headline-lg');
+        
+        setInterval(() => {
+            if (progress < 100) {
+                progress += Math.random() * 0.5;
+                if (progress > 100) progress = 100;
+                progressBar.style.width = `${progress}%`;
+                progressText.innerText = `${Math.floor(progress)}%`;
+            } else {
+                // Reset for demo loop
+                setTimeout(() => {
+                    progress = 0;
+                }, 2000);
+            }
+        }, 3000);
+
+        // System Health pulse
+        setInterval(() => {
+            const liveBadge = document.querySelector('.text-tertiary-fixed .material-symbols-outlined');
+            liveBadge.style.transition = 'transform 0.5s ease';
+            liveBadge.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                liveBadge.style.transform = 'rotate(360deg)';
+                setTimeout(() => liveBadge.style.transform = 'rotate(0deg)', 0);
+            }, 500);
+        }, 10000);
+    </script>
+</body></html>

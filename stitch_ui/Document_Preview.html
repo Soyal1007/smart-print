@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Document Preview - Smart Print</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Geist', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-panel {
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#005c3e",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#444651",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "on-tertiary-fixed": "#002113",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-container": "#2b4c9b",
+                        "surface-variant": "#d3e4fe",
+                        "secondary-fixed": "#e1e0ff",
+                        "tertiary": "#00422b",
+                        "secondary-container": "#6063ee",
+                        "primary-fixed": "#dae1ff",
+                        "primary": "#093483",
+                        "on-surface": "#0b1c30",
+                        "outline": "#747682",
+                        "on-primary-container": "#aec1ff",
+                        "secondary": "#4648d4",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#07006c",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-primary-fixed": "#001849",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-tertiary-container": "#49da9f",
+                        "on-secondary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed-variant": "#1f4291",
+                        "surface-bright": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#fffbff",
+                        "inverse-primary": "#b3c5ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c4c6d3",
+                        "surface-tint": "#3b5baa",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-fixed-dim": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "title-md": ["Geist"],
+                        "label-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface shadow-sm fixed top-0 w-full h-16 z-[60] flex justify-between items-center px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">school</span>
+</div>
+<span class="text-title-md font-title-md font-bold text-primary dark:text-primary-fixed-dim">Smart Print</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:block text-label-md font-label-md text-on-surface-variant">UID: 2024-8832</span>
+<button class="material-symbols-outlined p-2 rounded-full hover:bg-surface-variant transition-colors">notifications</button>
+</div>
+</header>
+<main class="flex-grow pt-24 pb-32 md:pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: PDF Preview (Asymmetric Layout) -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="flex justify-between items-end">
+<div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">Preview Document</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Check for formatting and alignment</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-high rounded-lg hover:bg-surface-variant transition-all"><span class="material-symbols-outlined">zoom_in</span></button>
+<button class="p-2 bg-surface-container-high rounded-lg hover:bg-surface-variant transition-all"><span class="material-symbols-outlined">zoom_out</span></button>
+</div>
+</div>
+<!-- PDF Preview Window -->
+<div class="relative aspect-[3/4] md:aspect-auto md:h-[600px] w-full bg-white rounded-xl shadow-md border border-outline-variant overflow-hidden group">
+<img class="w-full h-full object-contain p-8 md:p-12 opacity-90 group-hover:opacity-100 transition-opacity" data-alt="A high-resolution document preview showing a complex university thesis page with charts, academic text, and diagrams. The document is displayed on a clean white surface within a minimalist digital frame. The lighting is soft and even, highlighting the professional typography and layout. The overall aesthetic is clean, corporate, and academic, mirroring the Smart Print platform's reliability and precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzdNiyNrwyJlvT0F_LXaAqJ-W2vIFrsOOLAC8iehXE8NGTa8tlym9ZTUsEjvCTs47A10gU7sMIPebqSmVR6KA6rnm394NnpfM31RYu4NjzgP44oxKeLCuLVD8KJ1XxmtoG66_kYv6RvGYSl0fqCt25_Qd3Mr3lH3f8pPMBVVgzlNvpU9rlFiKbBn6bJWmv_ASIAPivuUoLE--T2M5sRhfJIxnY3r0ZwRrIPCErYnPpC4FOouLAk99WnCId11gxdSpB4-rLJBz7KrQ"/>
+<!-- Page Indicator Overlay -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 glass-panel px-4 py-2 rounded-full shadow-lg border border-white/20 flex items-center gap-4">
+<button class="material-symbols-outlined text-primary">chevron_left</button>
+<span class="text-label-md font-label-md text-on-surface font-bold">1 / 12</span>
+<button class="material-symbols-outlined text-primary">chevron_right</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Summary & Verification -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Notice Box -->
+<div class="bg-error-container border-l-4 border-error p-6 rounded-xl flex gap-4 items-start animate-pulse shadow-sm">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<p class="text-on-error-container font-label-md text-label-md leading-relaxed">
+                        Please verify your files carefully before payment. Printing begins automatically after payment.
+                    </p>
+</div>
+<!-- Summary Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-outline-variant flex flex-col gap-6">
+<div class="border-b border-outline-variant pb-4">
+<h2 class="text-title-md font-title-md text-on-surface">Print Summary</h2>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">description</span>
+<span class="text-body-md font-body-md text-on-surface-variant">Filename</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface truncate max-w-[150px]">Thesis_Final_Draft_v2.pdf</span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">palette</span>
+<span class="text-body-md font-body-md text-on-surface-variant">Settings</span>
+</div>
+<div class="flex flex-wrap justify-end gap-2">
+<span class="px-2 py-0.5 bg-secondary-container/10 text-on-secondary-fixed-variant text-label-sm font-label-sm rounded border border-secondary-container/20">Color</span>
+<span class="px-2 py-0.5 bg-secondary-container/10 text-on-secondary-fixed-variant text-label-sm font-label-sm rounded border border-secondary-container/20">Double Side</span>
+<span class="px-2 py-0.5 bg-secondary-container/10 text-on-secondary-fixed-variant text-label-sm font-label-sm rounded border border-secondary-container/20">2 Copies</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline">auto_stories</span>
+<span class="text-body-md font-body-md text-on-surface-variant">Total Pages</span>
+</div>
+<span class="text-label-md font-label-md text-on-surface">12 Pages</span>
+</div>
+<div class="pt-4 border-t border-dashed border-outline-variant mt-2">
+<div class="flex justify-between items-center">
+<span class="text-title-md font-title-md text-primary">Total Amount</span>
+<span class="text-headline-lg-mobile font-headline-lg-mobile text-primary">₹24.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-3 mt-auto">
+<button class="w-full py-4 rounded-xl border-2 border-outline text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-all active:scale-95 duration-150" onclick="window.history.back()">
+                        Back to Settings
+                    </button>
+<button class="w-full py-5 rounded-xl bg-primary text-on-primary font-title-md text-title-md shadow-lg hover:shadow-xl hover:bg-primary-container transition-all flex items-center justify-center gap-3 active:scale-95 duration-150">
+                        Proceed to Payment
+                        <span class="material-symbols-outlined">payments</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only Visibility) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-lowest dark:bg-inverse-surface shadow-[0px_-4px_20px_rgba(0,0,0,0.05)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-6 py-1">
+<span class="material-symbols-outlined">cloud_upload</span>
+<span class="text-label-sm font-label-sm">Upload</span>
+</div>
+<!-- Active: My Prints (since we are in the print flow) -->
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-2xl px-6 py-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="text-label-sm font-label-sm">My Prints</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline px-6 py-1">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</div>
+</nav>
+<!-- Footer (Desktop Only) -->
+<footer class="hidden md:flex w-full py-unit px-margin-desktop bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline justify-between items-center gap-4">
+<span class="text-label-md font-label-md font-bold text-on-surface">© 2024 Smart Print Campus Utilities</span>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:underline decoration-2 underline-offset-4 text-label-sm font-label-sm" href="#">Support</a>
+<a class="text-on-surface-variant hover:underline decoration-2 underline-offset-4 text-label-sm font-label-sm" href="#">Print History</a>
+<a class="text-on-surface-variant hover:underline decoration-2 underline-offset-4 text-label-sm font-label-sm" href="#">Terms of Service</a>
+</div>
+</footer>
+<script>
+        // Micro-interaction for the proceed button
+        const proceedBtn = document.querySelector('button.bg-primary');
+        proceedBtn.addEventListener('click', function() {
+            this.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Processing...';
+            setTimeout(() => {
+                // Simulation only
+                alert('Redirecting to secure gateway...');
+                this.innerHTML = 'Proceed to Payment <span class="material-symbols-outlined">payments</span>';
+            }, 1500);
+        });
+    </script>
+</body></html>

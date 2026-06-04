@@ -1,26 +1,250 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* =============================================
+   STITCH DESIGN SYSTEM TOKENS
+   Exact match to all 12 Stitch HTML files
+   ============================================= */
+@theme {
+  /* Colors */
+  --color-surface-container: #e5eeff;
+  --color-on-primary: #ffffff;
+  --color-tertiary-container: #005c3e;
+  --color-surface-container-low: #eff4ff;
+  --color-tertiary-fixed: #6ffbbe;
+  --color-surface: #f8f9ff;
+  --color-on-surface-variant: #444651;
+  --color-on-tertiary: #ffffff;
+  --color-primary-fixed-dim: #b3c5ff;
+  --color-on-tertiary-fixed: #002113;
+  --color-error-container: #ffdad6;
+  --color-inverse-on-surface: #eaf1ff;
+  --color-primary-container: #2b4c9b;
+  --color-surface-variant: #d3e4fe;
+  --color-secondary-fixed: #e1e0ff;
+  --color-tertiary: #00422b;
+  --color-secondary-container: #6063ee;
+  --color-primary-fixed: #dae1ff;
+  --color-primary: #093483;
+  --color-on-surface: #0b1c30;
+  --color-outline: #747682;
+  --color-on-primary-container: #aec1ff;
+  --color-secondary: #4648d4;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-fixed: #07006c;
+  --color-surface-container-lowest: #ffffff;
+  --color-inverse-surface: #213145;
+  --color-on-primary-fixed: #001849;
+  --color-tertiary-fixed-dim: #4edea3;
+  --color-on-tertiary-container: #49da9f;
+  --color-on-secondary-fixed-variant: #2f2ebe;
+  --color-on-primary-fixed-variant: #1f4291;
+  --color-surface-bright: #f8f9ff;
+  --color-on-error-container: #93000a;
+  --color-error: #ba1a1a;
+  --color-background: #f8f9ff;
+  --color-surface-container-high: #dce9ff;
+  --color-on-error: #ffffff;
+  --color-on-secondary-container: #fffbff;
+  --color-inverse-primary: #b3c5ff;
+  --color-on-tertiary-fixed-variant: #005236;
+  --color-surface-dim: #cbdbf5;
+  --color-outline-variant: #c4c6d3;
+  --color-surface-tint: #3b5baa;
+  --color-on-background: #0b1c30;
+  --color-surface-container-highest: #d3e4fe;
+  --color-secondary-fixed-dim: #c0c1ff;
+
+  /* Border Radius */
+  --radius: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-unit: 8px;
+  --spacing-container-max: 1440px;
+  --spacing-margin-desktop: 40px;
+  --spacing-margin-mobile: 16px;
+  --spacing-gutter: 24px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base */
+@layer base {
+  body {
+    @apply bg-background text-on-background;
+    font-family: 'Geist', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-family: 'Material Symbols Outlined';
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #c4c6d3; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #747682; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* =============================================
+   STITCH TYPOGRAPHY UTILITIES
+   Matching the Stitch Tailwind CDN fontSize config
+   ============================================= */
+@layer utilities {
+  .text-headline-xl {
+    font-size: 48px;
+    line-height: 56px;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .text-headline-lg {
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  .text-headline-lg-mobile {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 600;
+  }
+  .text-title-md {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 600;
+  }
+  .text-body-lg {
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 400;
+  }
+  .text-body-md {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+  }
+  .text-label-md {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+  .text-label-sm {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+  }
+
+  /* Spacing utilities from Stitch tokens */
+  .px-margin-desktop { padding-left: 40px; padding-right: 40px; }
+  .px-margin-mobile { padding-left: 16px; padding-right: 16px; }
+  .py-unit { padding-top: 8px; padding-bottom: 8px; }
+  .p-gutter { padding: 24px; }
+  .gap-gutter { gap: 24px; }
+  .max-w-container-max { max-width: 1440px; }
+
+  /* Glass effects */
+  .glass-panel {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  .glass-effect {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* Progress shimmer */
+  .progress-shimmer {
+    background: linear-gradient(90deg, #2b4c9b 0%, #6063ee 50%, #2b4c9b 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+
+  /* Step timeline */
+  .step-active .icon-container { background-color: #2b4c9b; color: #ffffff; }
+  .step-complete .icon-container { background-color: #4edea3; color: #002113; }
+  .icon-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,.1);
+    transition: colors 0.2s;
+    background-color: #e5eeff;
+    color: #444651;
+  }
+
+  /* Step line connector */
+  .step-line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background: repeating-linear-gradient(to right, transparent, transparent 4px, #c4c6d3 4px, #c4c6d3 8px);
+    z-index: 0;
+  }
+
+  /* Animations */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .check-draw {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: draw 0.8s ease-out forwards 0.5s;
+  }
+  .success-glow {
+    box-shadow: 0 0 40px rgba(78, 222, 163, 0.2);
+  }
+  .active-nav-link {
+    font-variation-settings: 'FILL' 1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Custom range slider */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-runnable-track {
+  background: #d3e4fe;
+  height: 6px;
+  border-radius: 3px;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -5px;
+  background-color: #093483;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
 }

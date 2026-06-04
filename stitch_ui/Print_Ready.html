@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Print Ready | Smart Print</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Geist', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .success-glow {
+            box-shadow: 0 0 40px rgba(78, 222, 163, 0.2);
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .check-draw {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: draw 0.8s ease-out forwards 0.5s;
+        }
+        @keyframes draw {
+            to { stroke-dashoffset: 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#e5eeff",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#005c3e",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-fixed": "#6ffbbe",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#444651",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#b3c5ff",
+                        "on-tertiary-fixed": "#002113",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-container": "#2b4c9b",
+                        "surface-variant": "#d3e4fe",
+                        "secondary-fixed": "#e1e0ff",
+                        "tertiary": "#00422b",
+                        "secondary-container": "#6063ee",
+                        "primary-fixed": "#dae1ff",
+                        "primary": "#093483",
+                        "on-surface": "#0b1c30",
+                        "outline": "#747682",
+                        "on-primary-container": "#aec1ff",
+                        "secondary": "#4648d4",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#07006c",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#213145",
+                        "on-primary-fixed": "#001849",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "on-tertiary-container": "#49da9f",
+                        "on-secondary-fixed-variant": "#2f2ebe",
+                        "on-primary-fixed-variant": "#1f4291",
+                        "surface-bright": "#f8f9ff",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "background": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#fffbff",
+                        "inverse-primary": "#b3c5ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-dim": "#cbdbf5",
+                        "outline-variant": "#c4c6d3",
+                        "surface-tint": "#3b5baa",
+                        "on-background": "#0b1c30",
+                        "surface-container-highest": "#d3e4fe",
+                        "secondary-fixed-dim": "#c0c1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1440px",
+                        "margin-desktop": "40px",
+                        "margin-mobile": "16px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "headline-lg-mobile": ["Geist"],
+                        "title-md": ["Geist"],
+                        "label-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-xl": ["Geist"],
+                        "body-lg": ["Geist"],
+                        "label-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center overflow-x-hidden">
+<!-- TopAppBar Shell Implementation -->
+<header class="bg-surface dark:bg-surface shadow-sm fixed top-0 w-full z-50 h-16 flex justify-between items-center px-margin-mobile">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold overflow-hidden">
+<img alt="College Logo" class="w-full h-full object-cover" data-alt="A clean, minimalist circular logo design representing a prestigious university. The logo features abstract geometric shapes in deep navy blue and crisp white, symbolizing knowledge and innovation. The background is a soft, professional studio lighting environment that emphasizes the premium corporate aesthetic of a high-end educational institution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAI89qMVSngk6MO3nJuCEwXMYRrBsfeCtnUhVyU_bH3fg19GZD3PWQJ_01CcigBjagnZGQE2rJLeP1lk4zF5yrA1V5C6gPqBxGRpds7L2VmtzqZTh563-AAOaplcq2s9zYCqOCVBSRT05m2QuCgpCdphw3Kfbom7RvLdLM2Op7IkJkmku31qw8mFc4HlVT67r9ABoMtsmeRn9OCjtl3_2KNRS4mmJmDp2xGts1brNHhppfVZKs8He69kdLh1lpRo-KY3dTPqToRu_A"/>
+</div>
+<span class="text-title-md font-title-md font-bold text-primary dark:text-primary-fixed-dim">Smart Print</span>
+</div>
+<div class="text-label-md font-label-md text-primary dark:text-primary-fixed-dim bg-surface-container-high px-3 py-1 rounded-full">
+            UID: 2024-8832
+        </div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-lg flex flex-col items-center justify-center px-margin-mobile pt-24 pb-12 text-center">
+<!-- Success Animation Container -->
+<div class="relative w-48 h-48 mb-unit animate-float">
+<!-- Animated Background Rings -->
+<div class="absolute inset-0 bg-tertiary-fixed-dim opacity-20 rounded-full scale-110 animate-pulse"></div>
+<div class="absolute inset-4 bg-tertiary-fixed-dim opacity-30 rounded-full scale-105"></div>
+<!-- Success Icon -->
+<div class="relative w-full h-full bg-tertiary-container rounded-full flex items-center justify-center success-glow">
+<svg class="w-24 h-24 text-tertiary-fixed" fill="none" stroke="currentColor" stroke-width="3" viewbox="0 0 24 24">
+<path class="check-draw" d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<!-- Headline -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface mt-8 mb-4">
+            Your documents are ready for collection
+        </h1>
+<!-- Instruction Text -->
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mb-10 leading-relaxed">
+            Visit the collection counter and collect your documents using your UID.
+        </p>
+<!-- UID Display Card -->
+<div class="w-full bg-surface-container-low border border-outline-variant rounded-xl p-8 mb-12 shadow-sm transition-all hover:shadow-md group">
+<span class="font-label-md text-label-md text-outline uppercase tracking-widest block mb-2">Collection Identification</span>
+<div class="flex items-center justify-center gap-4">
+<span class="font-headline-xl text-headline-xl text-primary select-all">
+                    25013003
+                </span>
+<button class="material-symbols-outlined text-primary-container p-2 rounded-full hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-90" title="Copy UID">
+                    content_copy
+                </button>
+</div>
+</div>
+<!-- Action Section -->
+<div class="w-full space-y-4">
+<button class="w-full h-14 bg-primary text-on-primary font-title-md text-title-md rounded-xl flex items-center justify-center gap-2 shadow-lg hover:bg-primary-container transition-all active:scale-[0.98] duration-150" onclick="window.location.reload()">
+<span class="material-symbols-outlined">home</span>
+                Go Home
+            </button>
+<button class="w-full h-12 bg-transparent text-primary font-label-md text-label-md rounded-xl border border-primary/20 hover:bg-primary/5 transition-colors">
+                View Receipt
+            </button>
+</div>
+<!-- Decorative Progress Indicator (Static for Completion) -->
+<div class="mt-16 w-full flex items-center gap-2">
+<div class="h-1 bg-tertiary-fixed-dim flex-grow rounded-full"></div>
+<div class="h-1 bg-tertiary-fixed-dim flex-grow rounded-full"></div>
+<div class="h-1 bg-tertiary-fixed-dim flex-grow rounded-full"></div>
+</div>
+<div class="mt-2 text-label-sm font-label-sm text-tertiary flex items-center gap-1 justify-center">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            Transaction Finalized
+        </div>
+</main>
+<!-- Footer implementation based on JSON -->
+<footer class="w-full py-unit px-margin-mobile flex flex-col md:flex-row justify-between items-center gap-4 bg-surface dark:bg-surface border-t border-outline-variant dark:border-outline">
+<div class="text-label-md font-label-md font-bold text-on-surface">
+            © 2024 Smart Print Campus Utilities
+        </div>
+<nav class="flex gap-6">
+<a class="text-on-surface-variant dark:text-outline text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Support</a>
+<a class="text-on-surface-variant dark:text-outline text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Print History</a>
+<a class="text-on-surface-variant dark:text-outline text-label-sm font-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+</nav>
+</footer>
+<!-- Bottom Navigation implementation (Suppressed per "Task-Focused" rule but technically available if required) -->
+<!-- Not rendered as this is a "Success/Confirmation" splash screen which prioritizes content canvas -->
+<script>
+        // Micro-interaction for the copy button
+        document.querySelector('button[title="Copy UID"]').addEventListener('click', function() {
+            const uidText = "25013003";
+            navigator.clipboard.writeText(uidText).then(() => {
+                const icon = this;
+                const originalText = icon.innerText;
+                icon.innerText = 'check';
+                icon.classList.add('text-tertiary');
+                setTimeout(() => {
+                    icon.innerText = originalText;
+                    icon.classList.remove('text-tertiary');
+                }, 2000);
+            });
+        });
+
+        // Add visual feedback to button click
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.add('scale-95');
+                setTimeout(() => this.classList.remove('scale-95'), 150);
+            });
+        });
+    </script>
+</body></html>
