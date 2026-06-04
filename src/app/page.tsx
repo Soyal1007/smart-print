@@ -175,7 +175,7 @@ export default function LandingPage() {
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-col items-center md:items-start gap-2">
             <span className="text-label-md font-bold text-on-surface">Smart Print Campus Utilities</span>
-            <p className="text-label-sm text-on-surface-variant">© 2024 Smart Print Campus Utilities</p>
+            <p className="text-label-sm text-on-surface-variant">© 2026 Smart Print Campus Utilities</p>
             <p className="text-label-sm text-outline">Built by <span className="text-primary font-semibold">Soyal Binu Eapen</span></p>
           </div>
           <div className="flex gap-6">

@@ -11,6 +11,8 @@ export default function OwnerDashboard() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({ todayRevenue: 0, todayJobs: 0, totalPages: 0, queueCount: 0 });
   const [search, setSearch] = useState("");
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const supabase = createClient();
   const router = useRouter();
 
@@ -20,7 +22,7 @@ export default function OwnerDashboard() {
       .select("*, job_files(*), profiles(uid, name)")
       .in("status", ["queued", "printing", "printed", "paid"])
       .order("created_at", { ascending: true });
-    if (queueData) setJobs(queueData);
+    if (queueData) { setJobs(queueData); setLastUpdated(new Date()); }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -227,66 +229,122 @@ export default function OwnerDashboard() {
                       <tr>
                         <td colSpan={7} className="text-center py-16 text-on-surface-variant">
                           <span className="material-symbols-outlined text-4xl block mb-2">check_circle</span>
-                          Queue is empty
+                          Queue is empty — all caught up!
                         </td>
                       </tr>
                     ) : filteredJobs.map((job, i) => (
-                      <tr key={job.id} className="hover:bg-surface-container-low/30 transition-colors">
-                        <td className="px-6 py-4">
-                          <span className={`w-8 h-8 rounded-full ${job.status === 'printing' ? 'bg-primary-container text-on-primary-container' : 'bg-surface-variant text-on-surface-variant'} flex items-center justify-center font-bold text-label-md`}>
-                            #{i + 1}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <p className="text-label-md font-bold text-on-surface">{job.profiles?.name || 'Student'}</p>
-                          <p className="text-label-sm text-outline">UID: {job.profiles?.uid || '—'}</p>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary text-xl">picture_as_pdf</span>
-                            <div>
-                              <p className="text-label-md font-medium text-on-surface truncate max-w-[150px]">{job.job_files?.[0]?.original_filename || 'File'}</p>
-                              <p className="text-label-sm text-outline">{job.total_pages} Pages</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${job.job_files?.[0]?.color_mode === 'color' ? 'bg-secondary-fixed text-on-secondary-fixed-variant' : 'bg-outline-variant text-on-surface-variant'}`}>
-                            {job.job_files?.[0]?.color_mode === 'color' ? 'Color' : 'B&W'}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 font-bold text-on-surface">₹{((job.total_price_paise || 0) / 100).toFixed(2)}</td>
-                        <td className="px-6 py-4">{getStatusChip(job.status)}</td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="flex justify-end gap-2">
-                            {(job.status === 'queued' || job.status === 'paid') ? (
-                              // Auto-print: these states shouldn't appear anymore but kept as safety net
-                              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-label-sm font-bold border border-orange-200">
-                                <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
-                                Queued
+                      <>
+                        <tr
+                          key={job.id}
+                          className={`hover:bg-surface-container-low/40 transition-colors cursor-pointer ${selectedJobId === job.id ? 'bg-primary/5 border-l-2 border-primary' : ''}`}
+                          onClick={() => setSelectedJobId(selectedJobId === job.id ? null : job.id)}
+                        >
+                          <td className="px-6 py-4">
+                            <span className={`w-8 h-8 rounded-full ${job.status === 'printing' ? 'bg-primary-container text-on-primary-container animate-pulse' : 'bg-surface-variant text-on-surface-variant'} flex items-center justify-center font-bold text-label-md`}>
+                              #{i + 1}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="text-label-md font-bold text-on-surface">{job.profiles?.name || 'Student'}</p>
+                            <p className="text-label-sm text-outline">UID: {job.profiles?.uid || '—'}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <span className="material-symbols-outlined text-primary text-xl">picture_as_pdf</span>
+                              <div>
+                                <p className="text-label-md font-medium text-on-surface truncate max-w-[150px]">
+                                  {job.job_files?.length > 1 ? `${job.job_files.length} files` : (job.job_files?.[0]?.original_filename || 'File')}
+                                </p>
+                                <p className="text-label-sm text-outline">{job.total_pages} total pages</p>
                               </div>
-                            ) : job.status === 'printing' ? (
-                              <button onClick={() => handleMarkPrinted(job.id)} className="px-3 py-1.5 rounded-lg bg-secondary text-on-secondary text-label-sm font-bold hover:opacity-90 transition-opacity">
-                                Mark Printed
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${job.job_files?.[0]?.color_mode === 'color' ? 'bg-secondary-fixed text-on-secondary-fixed-variant' : 'bg-outline-variant text-on-surface-variant'}`}>
+                              {job.job_files?.[0]?.color_mode === 'color' ? 'Color' : 'B&W'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 font-bold text-on-surface">₹{((job.total_price_paise || 0) / 100).toFixed(2)}</td>
+                          <td className="px-6 py-4">{getStatusChip(job.status)}</td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="flex justify-end gap-2" onClick={e => e.stopPropagation()}>
+                              {(job.status === 'queued' || job.status === 'paid') ? (
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-100 text-orange-800 text-label-sm font-bold border border-orange-200">
+                                  <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+                                  Queued
+                                </div>
+                              ) : job.status === 'printing' ? (
+                                <button onClick={() => handleMarkPrinted(job.id)} className="px-3 py-1.5 rounded-lg bg-secondary text-on-secondary text-label-sm font-bold hover:opacity-90 transition-opacity">
+                                  Mark Printed
+                                </button>
+                              ) : job.status === 'printed' ? (
+                                <button onClick={() => handleMarkCollected(job.id)} className="px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary text-label-sm font-bold hover:opacity-90 transition-opacity">
+                                  Mark Collected
+                                </button>
+                              ) : null}
+                              <button className="p-2 rounded-full hover:bg-surface-variant text-outline transition-colors">
+                                <span className="material-symbols-outlined">{selectedJobId === job.id ? 'expand_less' : 'expand_more'}</span>
                               </button>
-                            ) : job.status === 'printed' ? (
-                              <button onClick={() => handleMarkCollected(job.id)} className="px-3 py-1.5 rounded-lg bg-tertiary text-on-tertiary text-label-sm font-bold hover:opacity-90 transition-opacity">
-                                Mark Collected
-                              </button>
-                            ) : null}
-                            <button className="p-2 rounded-full hover:bg-surface-variant text-outline transition-colors">
-                              <span className="material-symbols-outlined">more_vert</span>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                            </div>
+                          </td>
+                        </tr>
+                        {/* ── Expanded detail row ── */}
+                        {selectedJobId === job.id && (
+                          <tr key={`${job.id}-detail`} className="bg-primary/3">
+                            <td colSpan={7} className="px-8 py-4">
+                              <div className="bg-surface-container-low rounded-xl p-4 border border-outline-variant/40">
+                                <p className="text-label-md font-bold text-primary mb-3 flex items-center gap-2">
+                                  <span className="material-symbols-outlined text-base">print</span>
+                                  Print Job Details — {job.profiles?.name} (UID: {job.profiles?.uid})
+                                </p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                  {(job.job_files || []).map((f: any, fi: number) => (
+                                    <div key={f.id} className="bg-surface rounded-xl p-3 border border-outline-variant/30 flex items-start gap-3">
+                                      <div className="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center flex-shrink-0">
+                                        <span className="material-symbols-outlined text-on-primary-container text-base">description</span>
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-label-md font-bold text-on-surface truncate">File {fi + 1}: {f.original_filename}</p>
+                                        <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1">
+                                          <span className="text-label-sm text-outline">{f.page_count || '?'} pages</span>
+                                          <span className="text-label-sm text-outline">·</span>
+                                          <span className="text-label-sm text-outline">{f.color_mode === 'color' ? '🎨 Color' : '⬛ B&W'}</span>
+                                          <span className="text-label-sm text-outline">·</span>
+                                          <span className="text-label-sm text-outline">{f.sides === 'double' ? 'Double-sided' : 'Single-sided'}</span>
+                                          <span className="text-label-sm text-outline">·</span>
+                                          <span className="text-label-sm text-outline">{f.copies || 1} {f.copies > 1 ? 'copies' : 'copy'}</span>
+                                          {f.page_range && f.page_range !== 'all' && (
+                                            <><span className="text-label-sm text-outline">·</span>
+                                            <span className="text-label-sm text-outline">Pages: {f.page_range}</span></>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div className="mt-3 pt-3 border-t border-outline-variant/30 flex justify-between items-center">
+                                  <span className="text-label-sm text-outline">
+                                    Ordered: {new Date(job.created_at).toLocaleString('en-IN')}
+                                  </span>
+                                  <span className="text-label-md font-bold text-primary">
+                                    Total: ₹{((job.total_price_paise || 0) / 100).toFixed(2)}
+                                  </span>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </>
                     ))}
                   </tbody>
                 </table>
               )}
             </div>
             <div className="px-6 py-3 border-t border-outline-variant bg-surface flex justify-between items-center">
-              <p className="text-label-sm text-outline">Showing {filteredJobs.length} active print jobs in queue</p>
+              <p className="text-label-sm text-outline">
+                Showing {filteredJobs.length} active jobs · Last updated: {lastUpdated.toLocaleTimeString('en-IN')}
+                <span className="ml-2 inline-flex items-center gap-1 text-tertiary"><span className="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse inline-block"></span>Live</span>
+              </p>
               <div className="flex items-center gap-4">
                 <span className="text-label-sm text-outline">Rows per page:</span>
                 <select className="bg-transparent border-none text-label-sm font-bold focus:ring-0">
@@ -301,7 +359,7 @@ export default function OwnerDashboard() {
         <footer className="w-full py-4 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4 bg-surface border-t border-outline-variant">
           <div className="flex items-center gap-4">
             <span className="text-label-md font-bold text-on-surface">Smart Print Campus Utilities</span>
-            <span className="text-label-sm text-outline">© 2024</span>
+            <span className="text-label-sm text-outline">© 2026 · Built by <span className="text-primary font-medium">Soyal Binu Eapen</span></span>
           </div>
           <div className="flex gap-6">
             <a className="text-on-surface-variant text-label-sm hover:underline decoration-2 underline-offset-4" href="#">Support</a>
