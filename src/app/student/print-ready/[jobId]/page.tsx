@@ -115,10 +115,10 @@ export default function PrintReadyPage({ params }: { params: Promise<{ jobId: st
 
       {/* Footer */}
       <footer className="w-full py-unit px-margin-mobile flex flex-col md:flex-row justify-between items-center gap-4 bg-surface border-t border-outline-variant">
-        <div className="text-label-md font-bold text-on-surface">© 2024 Smart Print Campus Utilities</div>
+        <div className="text-label-md font-bold text-on-surface">© 2026 Smart Print · Built by <span className="text-primary">Soyal Binu Eapen</span></div>
         <nav className="flex gap-6">
-          <a className="text-on-surface-variant text-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Support</a>
-          <a className="text-on-surface-variant text-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Print History</a>
+          <a className="text-on-surface-variant text-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="/support">Support</a>
+          <a className="text-on-surface-variant text-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="/student/dashboard">Print History</a>
           <a className="text-on-surface-variant text-label-sm hover:underline decoration-2 underline-offset-4 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
         </nav>
       </footer>

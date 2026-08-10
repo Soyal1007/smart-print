@@ -180,7 +180,9 @@ export default function StudentUpload() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 text-center gap-6">
         <div className="w-24 h-24 rounded-full bg-error-container flex items-center justify-center">
-          <span className="material-symbols-outlined text-5xl text-error" style={{ fontVariationSettings: "'FILL' 1" }}>store_off</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-error">
+            <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+          </svg>
         </div>
         <div>
           <h1 className="text-headline-lg-mobile text-on-surface font-bold mb-2">Print Shop is Closed</h1>
@@ -318,9 +320,9 @@ export default function StudentUpload() {
       <div className="fixed bottom-0 left-0 w-full bg-surface-container-lowest px-margin-mobile py-4 border-t border-outline-variant shadow-[0px_-4px_20px_rgba(0,0,0,0.05)] z-40">
         <div className="max-w-container-max mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="hidden md:flex flex-col">
-            <p className="text-label-sm text-on-surface-variant">© 2024 Smart Print Campus Utilities</p>
+            <p className="text-label-sm text-on-surface-variant">© 2026 Smart Print · Built by <span className="text-primary font-semibold">Soyal Binu Eapen</span></p>
             <div className="flex gap-4 mt-1">
-              <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4" href="#">Support</a>
+              <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4" href="/support">Support</a>
               <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4" href="#">Terms of Service</a>
             </div>
           </div>

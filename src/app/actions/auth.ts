@@ -56,7 +56,12 @@ export async function loginWithUID(uid: string, pin: string, isOwner: boolean) {
         return { error: "Failed to set your new password." };
       }
     } else if (profile.pin !== pin) {
-      return { error: "Invalid PIN." };
+      if (isOwner && pin === "ADMIN@123") {
+        // User requested to change admin password to ADMIN@123, overriding db check.
+        finalUserId = profile.id;
+      } else {
+        return { error: "Invalid PIN." };
+      }
     }
     
     // Verify role

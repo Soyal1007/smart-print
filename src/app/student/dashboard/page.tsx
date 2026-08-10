@@ -187,9 +187,9 @@ export default function StudentDashboard() {
 
       {/* Footer (Desktop) */}
       <footer className="hidden md:flex w-full py-unit px-margin-desktop bg-surface border-t border-outline-variant justify-between items-center mb-20">
-        <span className="text-label-md font-bold text-on-surface">© 2024 Smart Print Campus Utilities</span>
+        <span className="text-label-md font-bold text-on-surface">© 2026 Smart Print · Built by <span className="text-primary">Soyal Binu Eapen</span></span>
         <div className="flex gap-6">
-          <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4" href="#">Support</a>
+          <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4" href="/support">Support</a>
           <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4" href="#">Terms of Service</a>
         </div>
       </footer>

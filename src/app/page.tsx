@@ -19,7 +19,9 @@ export default function LandingPage() {
       {/* Shop Closed Banner */}
       {!shopOpen && (
         <div className="bg-error text-on-error text-center py-3 px-4 text-label-md font-bold flex items-center justify-center gap-2">
-          <span className="material-symbols-outlined text-base">store_off</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 flex-shrink-0">
+            <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+          </svg>
           {offlineMsg || "The print shop is currently closed. Please check back later."}
         </div>
       )}
@@ -197,8 +199,8 @@ export default function LandingPage() {
             <p className="text-label-sm text-outline">Built by <span className="text-primary font-semibold">Soyal Binu Eapen</span></p>
           </div>
           <div className="flex gap-6">
-            <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4 transition-all" href="#">Support</a>
-            <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4 transition-all" href="#">Print History</a>
+            <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4 transition-all" href="/support">Support</a>
+            <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4 transition-all" href="/student/dashboard">Print History</a>
             <a className="text-label-sm text-on-surface-variant hover:underline decoration-2 underline-offset-4 transition-all" href="#">Terms of Service</a>
           </div>
         </div>
