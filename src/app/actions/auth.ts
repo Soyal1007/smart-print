@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
+import studentsData from "@/app/data/students.json";
 
 export async function loginWithUID(uid: string, pin: string, isOwner: boolean) {
   // Use a server client to query the database. Since RLS is permissive, anon key is fine.
@@ -72,7 +73,7 @@ export async function loginWithUID(uid: string, pin: string, isOwner: boolean) {
   }
   let finalName = "";
   if (!profile) {
-    const students = require('@/app/data/students.json');
+    const students: Record<string, string> = studentsData;
     const name = students[safeUid.toUpperCase()] || students[safeUid] || (isOwner ? "Shop Owner" : "Student");
 
     // User doesn't exist, create them
